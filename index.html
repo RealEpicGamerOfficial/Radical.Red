@@ -1,1 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radical Red Dashboard</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Load Google Icons (Material Symbols) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
+    <style>
+        /* --- THEME DEFINITIONS USING CSS VARIABLES --- */
+        /* CLASSIC (Default: Red/Dark Slate) */
+        .theme-classic {
+            --color-primary-rgb: 220, 38, 38; /* Red 600 */
+            --color-secondary-rgb: 255, 255, 255; /* White */
+            --color-text-rgb: 209, 213, 219; /* Gray 300 */
+            --color-bg-base: #0a0a0a; /* Darker Black */
+            --color-bg-header: #111827; /* Deep Slate */
+            --color-bg-card: #1f2937; /* Dark Slate */
+            --color-border-subtle: #4b5563; /* Gray 600 */
+            --color-border-accent: rgba(220, 38, 38, 0.5); /* Red 50% opacity */
+            --shadow-glow: 0 0 10px rgba(220, 38, 38, 0.5), 0 0 20px rgba(220, 38, 38, 0.2);
+        }
+
+        /* HALLOWEEN 2025 (Orange/Purple) */
+        .theme-halloween {
+            --color-primary-rgb: 249, 115, 22; /* Orange 600 */
+            --color-secondary-rgb: 168, 85, 247; /* Purple 500 */
+            --color-text-rgb: 255, 255, 255; /* White */
+            --color-bg-base: #000000; /* Pure Black */
+            --color-bg-header: #0d041a; /* Darker Purple */
+            --color-bg-card: #1c002b; /* Deep Purple Black */
+            --color-border-subtle: #6d28d9; /* Violet 700 */
+            --color-border-accent: rgba(249, 115, 22, 0.7); /* Orange 70% opacity */
+            --shadow-glow: 0 0 15px rgba(249, 115, 22, 0.7), 0 0 5px rgba(168, 85, 247, 0.5);
+        }
+
+        /* NEW: CHRISTMAS 2025 (Green/Red) */
+        .theme-christmas {
+            --color-primary-rgb: 22, 163, 74; /* Green 600 */
+            --color-secondary-rgb: 220, 38, 38; /* Red 600 */
+            --color-text-rgb: 229, 231, 235; /* Gray 200 */
+            --color-bg-base: #051007; /* Dark Green-Black */
+            --color-bg-header: #042f10; /* Dark Green */
+            --color-bg-card: #064e18; /* Deep Green */
+            --color-border-subtle: #15803d; /* Green 700 */
+            --color-border-accent: rgba(220, 38, 38, 0.7); /* Red 70% opacity */
+            --shadow-glow: 0 0 15px rgba(220, 38, 38, 0.6), 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+        
+        /* NEW: PARTY (Pink/Teal) */
+        .theme-party {
+            --color-primary-rgb: 236, 72, 153; /* Pink 500 */
+            --color-secondary-rgb: 20, 184, 166; /* Teal 500 */
+            --color-text-rgb: 229, 231, 235; /* Gray 200 */
+            --color-bg-base: #10001a; /* Dark Purple-Black */
+            --color-bg-header: #2b003d; /* Dark Magenta */
+            --color-bg-card: #4a044e; /* Deep Fuchsia */
+            --color-border-subtle: #86198f; /* Fuchsia 700 */
+            --color-border-accent: rgba(20, 184, 166, 0.7); /* Teal 70% opacity */
+            --shadow-glow: 0 0 15px rgba(236, 72, 153, 0.7), 0 0 5px rgba(20, 184, 166, 0.5);
+        }
+        
+        /* NEW: 4 STUDS (Blue/Yellow/Red/Green) */
+        .theme-4studs {
+            --color-primary-rgb: 59, 130, 246; /* Blue 500 */
+            --color-secondary-rgb: 234, 179, 8; /* Yellow 600 */
+            --color-text-rgb: 243, 244, 246; /* Gray 100 */
+            --color-bg-base: #0f172a; /* Slate 900 */
+            --color-bg-header: #1e293b; /* Slate 800 */
+            --color-bg-card: #334155; /* Slate 700 */
+            --color-border-subtle: #475569; /* Slate 600 */
+            --color-border-accent: rgba(234, 179, 8, 0.7); /* Yellow 70% opacity */
+            --shadow-glow: 0 0 12px rgba(220, 38, 38, 0.6), 0 0 12px rgba(22, 163, 74, 0.6);
+        }
+
+        /* --- BASE STYLES & THEMED UTILITIES --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            background-color: var(--color-bg-base);
+            color: rgb(var(--color-text-rgb));
+        }
+
+        /* Elements using the primary accent color */
+        .text-primary-color { color: rgb(var(--color-primary-rgb)); }
+        .border-primary-accent { border-color: rgb(var(--color-primary-rgb)); }
+        .bg-primary-accent { background-color: rgb(var(--color-primary-rgb)); }
+        .hover\:bg-primary-darken:hover { background-color: rgba(var(--color-primary-rgb), 0.85); }
+        .shadow-themed-glow { box-shadow: var(--shadow-glow); }
+
+        /* Card and Header backgrounds */
+        .bg-card-themed {
+            background-color: var(--color-bg-card);
+            background-image: linear-gradient(145deg, var(--color-bg-card), var(--color-bg-header));
+            border: 1px solid var(--color-border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .bg-header-themed {
+            background-color: var(--color-bg-header);
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            transition: font-variation-settings 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        
+        summary { list-style: none; position: relative; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after {
+            content: 'expand_more';
+            font-family: 'Material Symbols Outlined';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: rgb(var(--color-primary-rgb));
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        details[open] summary::after { content: 'expand_less'; }
+        
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .spinner { animation: spin 1.5s linear infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col theme-classic">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-black flex flex-col justify-center items-center transition-opacity duration-500">
+        <!-- Themed placeholder logo -->
+        <div id="loading-logo-container" class="h-24 w-24 spinner rounded-full border-4 flex items-center justify-center bg-gray-900 border-primary-accent shadow-themed-glow">
+             <span class="text-4xl font-bold text-primary-color">RR</span>
+        </div>
+        <h1 class="text-4xl font-extrabold text-primary-color mt-4 tracking-wider">RADICAL RED</h1>
+        
+        <!-- Progress Bar -->
+        <div class="w-2/3 max-w-sm mt-6 bg-gray-800 rounded-full h-2.5 border border-primary-accent/50">
+            <div id="progress-bar" class="bg-primary-accent h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;"></div>
+        </div>
+    </div>
+
+    <!-- Main App Wrapper (Hidden by default) -->
+    <div id="app" class="flex flex-col min-h-screen w-full hidden">
+        <!-- Header -->
+        <header class="sticky top-0 bg-header-themed border-b border-primary-accent/40 w-full z-10 shadow-xl shadow-black/50">
+            <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                         <!-- Themed placeholder logo -->
+                         <div class="h-8 w-8 mr-3 border-2 rounded-full flex items-center justify-center bg-gray-900 border-primary-accent">
+                            <span class="text-sm font-bold text-primary-color">RR</span>
+                         </div>
+                        <h1 class="text-xl font-bold text-white tracking-widest">RADICAL RED</h1>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="text-sm font-medium text-primary-color/80">V2.1.0-alpha</span>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
+            
+            <!-- Home Tab Content (DASHBOARD) -->
+            <div id="content-home" class="tab-content space-y-6">
+                
+                <!-- Welcome/Status Card -->
+                <div class="bg-card-themed p-6 rounded-xl shadow-2xl border-l-4 border-primary-accent/80 hover:shadow-themed-glow transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-3xl font-extrabold text-white">Welcome, Commander.</h2>
+                        <span class="material-symbols-outlined text-4xl text-primary-color">dashboard</span>
+                    </div>
+                    <p class="text-gray-400 mt-2 text-sm">
+                        Your dashboard provides quick access to tools and updates. Access controls via the bottom navigation.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        <button onclick="showTab('games')" class="bg-primary-accent text-white text-sm py-2 px-4 rounded-full font-semibold hover:bg-primary-darken transition-colors shadow-lg shadow-black/50">
+                            Go to Games
+                        </button>
+                        <button onclick="showTab('ai')" class="bg-gray-700 text-gray-200 text-sm py-2 px-4 rounded-full font-semibold hover:bg-gray-600 transition-colors shadow-lg shadow-black/50">
+                            Check Storm Status
+                        </button>
+                        <button onclick="showTab('settings')" class="bg-gray-700 text-gray-200 text-sm py-2 px-4 rounded-full font-semibold hover:bg-gray-600 transition-colors shadow-lg shadow-black/50">
+                            Settings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Access / Featured Card -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Featured Game Card -->
+                    <div class="bg-card-themed p-5 rounded-xl shadow-xl border border-primary-accent/20">
+                        <h3 class="text-xl font-semibold text-primary-color mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary-color">local_fire_department</span>
+                            Hot Picks
+                        </h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center justify-between p-3 bg-primary-accent/10 rounded-lg hover:bg-primary-accent/20 cursor-pointer transition-colors" onclick="launchGame('https://cat-bounce.com/')">
+                                <span class="text-white font-medium truncate">Cat Bounce (New)</span>
+                                <span class="material-symbols-outlined text-primary-color">arrow_forward_ios</span>
+                            </li>
+                             <li class="flex items-center justify-between p-3 bg-primary-accent/10 rounded-lg hover:bg-primary-accent/20 cursor-pointer transition-colors" onclick="launchGame('https://mirror.turbowarp.xyz/?fps=60&stuck&offscreen&limitless&hqpen#600000221')">
+                                <span class="text-white font-medium truncate">Turbowarp Game 4</span>
+                                <span class="material-symbols-outlined text-primary-color">arrow_forward_ios</span>
+                            </li>
+                            <li class="flex items-center justify-between p-3 bg-primary-accent/10 rounded-lg hover:bg-primary-accent/20 cursor-pointer transition-colors" onclick="launchGame('https://orb.farm/')">
+                                <span class="text-white font-medium truncate">Orb Farm (Simulation)</span>
+                                <span class="material-symbols-outlined text-primary-color">arrow_forward_ios</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- System Status Card -->
+                    <div class="bg-card-themed p-5 rounded-xl shadow-xl border border-primary-accent/20">
+                        <h3 class="text-xl font-semibold text-primary-color mb-3 flex items-center gap-2">
+                             <span class="material-symbols-outlined text-primary-color">monitor_heart</span>
+                            System Status
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm py-1 border-b border-gray-700/50">
+                                <span class="text-gray-400">Core Services</span>
+                                <span class="text-green-400 font-semibold flex items-center gap-1">Online <span class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span></span>
+                            </div>
+                            <div class="flex justify-between text-sm py-1 border-b border-gray-700/50">
+                                <span class="text-gray-400">Game Links Check</span>
+                                <span class="text-yellow-400 font-semibold">Partial OK</span>
+                            </div>
+                            <div class="flex justify-between text-sm py-1">
+                                <span class="text-gray-400">Last Update</span>
+                                <span class="text-gray-300">Oct 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google (Non-USA) Section - Now a sleek card -->
+                <details class="bg-card-themed rounded-xl shadow-2xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">travel_explore</span>
+                        Regional Search Tools (Google Non-USA)
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <a href="https://www.google.co.ma/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">Morocco</a>
+                        <a href="https://www.google.co.jp/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">Japan</a>
+                        <a href="https://www.google.co.il/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">Israel</a>
+                        <a href="https://www.google.co.nz/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">New Zealand</a>
+                        <a href="https://www.google.com.ar/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">Argentina</a>
+                        <a href="https://www.google.co.in/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">India</a>
+                        <a href="https://google.com.mx/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">Mexico</a>
+                        <a href="https://google.com.sa/?gfe_rd=mr&pli=1&safe=active&ssui=on" target="_blank" rel="noopener noreferrer" class="bg-primary-accent/10 p-2 rounded-lg text-center text-gray-300 hover:bg-primary-accent/30 hover:text-white transition-colors text-sm font-medium border border-primary-accent/30">Saudi Arabia</a>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Games Tab Content -->
+            <div id="content-games" class="tab-content space-y-4">
+                
+                <!-- Game Card Template -->
+                <template id="game-card-template">
+                    <div class="bg-card-themed p-4 rounded-xl shadow-lg flex flex-col justify-between border-2 border-primary-accent/10 hover:border-primary-accent/50 transition-all duration-200">
+                        <div>
+                            <h3 class="font-bold text-white truncate game-name text-lg">Game Name</h3>
+                            <p class="text-xs text-gray-500 break-all game-url mt-1">game.url.com</p>
+                        </div>
+                        <button class="game-link mt-3 block w-full text-center bg-primary-accent text-white py-2 px-3 rounded-lg font-semibold hover:bg-primary-darken transition-colors shadow-md shadow-black/50">
+                            Launch
+                        </button>
+                    </div>
+                </template>
+                
+                <!-- NEW: Halloween 2025 Section -->
+                <details class="bg-card-themed rounded-xl shadow-xl border-2 border-primary-accent/40" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                         <span class="material-symbols-outlined text-primary-color">celebration</span>
+                         Halloween 2025
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <!-- Game Cards inserted by JS -->
+                    </div>
+                </details>
+
+                <!-- Turbowarp Games -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                         <span class="material-symbols-outlined text-primary-color">rocket_launch</span>
+                         Turbowarp Games
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <!-- Game Cards inserted by JS -->
+                    </div>
+                </details>
+                
+                <!-- Adventure -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">map</span>
+                        Adventure
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+                
+                <!-- Art -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">brush</span>
+                        Art
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+
+                <!-- Puzzle -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20">
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">extension</span>
+                        Puzzle
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20">
+                        <p class="text-gray-400 italic text-sm">No games listed in this category.</p>
+                    </div>
+                </details>
+
+                <!-- Action -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">sports_martial_arts</span>
+                        Action
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+                
+                <!-- Sandbox -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">interests</span>
+                        Sandbox
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+                
+                <!-- Gaming Sites -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-yellow-400 hover:text-yellow-300 transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-yellow-500">warning</span>
+                        Gaming Sites*
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20">
+                         <p class="text-yellow-500 text-sm mb-4 font-medium italic">
+                            *These links are external and unverified. Proceed with caution.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        </div>
+                    </div>
+                </details>
+                
+                <!-- Simulation -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">spa</span>
+                        Simulation
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+
+                <!-- Google Doodles -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">stadia_controller</span>
+                        Google Doodles
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+                
+                <!-- Google Event Sites -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">event_available</span>
+                        Google Event Sites
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+
+                <!-- Card Games -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">playing_cards</span>
+                        Card Games
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+                
+                <!-- Additional Games -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">add_reaction</span>
+                        Additional Games
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <!-- Games populated by JS -->
+                    </div>
+                </details>
+
+                <!-- Strategy -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20" open>
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-white hover:text-primary-color transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary-color">military_tech</span>
+                        Strategy
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    </div>
+                </details>
+                
+                <!-- Scratch (Deprecated) -->
+                <details class="bg-card-themed rounded-xl shadow-xl border border-primary-accent/20">
+                    <summary class="p-4 cursor-pointer text-lg font-semibold text-gray-500 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-gray-500">visibility_off</span>
+                        Scratch (No Longer Supported)
+                    </summary>
+                    <div class="p-4 border-t border-primary-accent/20">
+                        <p class="text-gray-500 italic text-sm">This category is no longer supported due to platform changes.</p>
+                    </div>
+                </details>
+
+            </div>
+
+            <!-- Storm AI Tab Content (UNAVAILABLE MESSAGE) -->
+            <div id="content-ai" class="tab-content rounded-xl bg-card-themed p-6 shadow-2xl border-2 border-primary-accent/50">
+                <div class="text-center py-10">
+                    <span class="material-symbols-outlined text-primary-color text-6xl">cloud_off</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-4">Storm AI Offline</h2>
+                    <p class="text-gray-400 mt-4 text-lg max-w-lg mx-auto">
+                        Storm is currently not available at this time. If you know that Storm has been released, make sure your country isn't in the unavailable list.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Settings Tab Content (NEW) -->
+            <div id="content-settings" class="tab-content rounded-xl bg-card-themed p-6 shadow-2xl border-2 border-primary-accent/50">
+                <h2 class="text-3xl font-extrabold text-white mb-6 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary-color text-4xl">settings</span>
+                    App Settings
+                </h2>
+                <div class="space-y-6">
+                    <!-- Theme Selection -->
+                    <div class="bg-gray-900/50 p-4 rounded-xl border border-primary-accent/20">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary-color">palette</span>
+                            Application Theme
+                        </h3>
+                        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Classic -->
+                            <button onclick="setTheme('classic')" id="theme-classic-btn" class="theme-option-btn p-4 rounded-xl text-center font-bold transition-all border-4 border-transparent hover:border-red-600 bg-[#280000]/60 text-red-400">
+                                <span class="material-symbols-outlined text-2xl mb-1">star</span>
+                                Classic (Red)
+                            </button>
+                            <!-- Halloween -->
+                            <button onclick="setTheme('halloween')" id="theme-halloween-btn" class="theme-option-btn p-4 rounded-xl text-center font-bold transition-all border-4 border-transparent hover:border-orange-500 bg-[#1c002b]/60 text-purple-400">
+                                <span class="material-symbols-outlined text-2xl mb-1">celebration</span>
+                                Halloween 2025
+                            </button>
+                            <!-- Christmas -->
+                            <button onclick="setTheme('christmas')" id="theme-christmas-btn" class="theme-option-btn p-4 rounded-xl text-center font-bold transition-all border-4 border-transparent hover:border-green-600 bg-[#064e18]/60 text-green-400">
+                                <span class="material-symbols-outlined text-2xl mb-1">ac_unit</span>
+                                Christmas 2025
+                            </button>
+                            <!-- Party -->
+                            <button onclick="setTheme('party')" id="theme-party-btn" class="theme-option-btn p-4 rounded-xl text-center font-bold transition-all border-4 border-transparent hover:border-pink-500 bg-[#4a044e]/60 text-pink-400">
+                                <span class="material-symbols-outlined text-2xl mb-1">music_note</span>
+                                Party
+                            </button>
+                            <!-- 4 Studs -->
+                            <button onclick="setTheme('4studs')" id="theme-4studs-btn" class="theme-option-btn p-4 rounded-xl text-center font-bold transition-all border-4 border-transparent hover:border-blue-500 bg-[#334155]/60 text-blue-400">
+                                <span class="material-symbols-outlined text-2xl mb-1">apps</span>
+                                4 Studs
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">Changes are saved automatically.</p>
+                    </div>
+                    
+                    <div class="bg-gray-900/50 p-4 rounded-xl border border-primary-accent/20">
+                         <h3 class="text-xl font-semibold text-white mb-2">About</h3>
+                         <p class="text-sm text-gray-400">Radical Red Dashboard V2.1.0-alpha. Created for the Canvas environment.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game Clicked Screen (Hidden by default) -->
+            <div id="game-clicked-screen" class="hidden rounded-xl bg-card-themed p-8 shadow-2xl border-l-4 border-primary-accent/80 text-center">
+                <h2 class="text-3xl font-extrabold text-primary-color mb-4">Launch Successful!</h2>
+                <p class="text-gray-400 mb-8">
+                    Your selected link should now be open in a new tab.
+                </p>
+                <!-- Buttons Block -->
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="goBackToGames()" class="bg-primary-accent text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-darken transition-colors shadow-lg flex items-center justify-center gap-2 border border-primary-accent/50">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Back to Games
+                    </button>
+                    <button onclick="reportProblem()" class="bg-gray-700 text-gray-300 py-3 px-6 rounded-lg font-semibold hover:bg-gray-600 transition-colors shadow-lg flex items-center justify-center gap-2 border border-gray-600">
+                        <span class="material-symbols-outlined">report</span>
+                        Report a problem
+                    </button>
+                    <button onclick="suggestFeature()" class="bg-gray-700 text-yellow-300 py-3 px-6 rounded-lg font-semibold hover:bg-gray-600 transition-colors shadow-lg flex items-center justify-center gap-2 border border-yellow-600">
+                        <span class="material-symbols-outlined">lightbulb</span>
+                        Suggest features
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Warning Modal (Hidden by default) -->
+            <div id="warning-modal" class="hidden fixed inset-0 z-50 bg-black/90 flex justify-center items-center p-4">
+                <div class="bg-card-themed rounded-xl shadow-themed-glow p-8 w-full max-w-lg border-2 border-primary-accent/80">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-color text-4xl">gpp_maybe</span>
+                        <h2 class="text-3xl font-bold text-white">External Link Warning</h2>
+                    </div>
+                    <p class="text-gray-400 mt-4 text-sm space-y-3 border-t border-primary-accent/20 pt-4">
+                        <span class="block">Please understand **WE (Radical Red) do not own, nor manage** any of these external game sites.</span>
+                        <span class="block">The games may contain ads, trackers, or unexpected content so be **extremely CAREFUL!**</span>
+                        <span class="block font-medium text-yellow-400">Recommendation: Use an adblocker (like Ublock Origin Lite) and an Antivirus/VirusTotal if downloading files.</span>
+                    </p>
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="acknowledgeWarning()" class="bg-primary-accent text-white py-2.5 px-6 rounded-lg font-bold hover:bg-primary-darken transition-colors shadow-md shadow-black/50">
+                            I Understand & Proceed
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        
+        <!-- Bottom Tab Navigation -->
+        <nav class="fixed bottom-0 left-0 w-full h-16 bg-header-themed border-t border-primary-accent/40 shadow-2xl shadow-black/70 flex justify-around items-center z-50">
+            <!-- Home Tab Button -->
+            <button onclick="showTab('home')" id="bottom-tab-home" class="bottom-tab-button flex flex-col items-center justify-center w-full h-full text-primary-color transition-colors hover:bg-primary-accent/10">
+                <span class="material-symbols-outlined h-6 w-6 mb-0.5">home</span>
+                <span class="text-xs font-medium">Dashboard</span>
+            </button>
+            
+            <!-- Games Tab Button -->
+            <button onclick="showTab('games')" id="bottom-tab-games" class="bottom-tab-button flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-color transition-colors hover:bg-primary-accent/10">
+                <span class="material-symbols-outlined h-6 w-6 mb-0.5">sports_esports</span>
+                <span class="text-xs font-medium">Games</span>
+            </button>
+            
+            <!-- Storm AI Tab Button -->
+            <button onclick="showTab('ai')" id="bottom-tab-ai" class="bottom-tab-button flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-color transition-colors hover:bg-primary-accent/10">
+                <span class="material-symbols-outlined h-6 w-6 mb-0.5">bolt</span>
+                <span class="text-xs font-medium">Storm AI</span>
+            </button>
+            
+            <!-- Settings Tab Button (NEW) -->
+            <button onclick="showTab('settings')" id="bottom-tab-settings" class="bottom-tab-button flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-primary-color transition-colors hover:bg-primary-accent/10">
+                <span class="material-symbols-outlined h-6 w-6 mb-0.5">settings</span>
+                <span class="text-xs font-medium">Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        // --- App State ---
+        let isAppLoaded = false;
+        let hasAcknowledgedWarning = false;
+        const tabs = ['home', 'games', 'ai', 'settings']; // Updated tabs list
+        
+        // The URL for the report problem form
+        const REPORT_FORM_URL = 'https://forms.gle/WzKJ73sQ5WH4ubgF9';
+        // The URL for the suggest feature form
+        const SUGGEST_FORM_URL = 'https://forms.gle/qPF9kTLWrK7vMWmR7';
+        
+        // --- Element Selectors ---
+        const bottomTabButtons = {
+            home: document.getElementById('bottom-tab-home'),
+            games: document.getElementById('bottom-tab-games'),
+            ai: document.getElementById('bottom-tab-ai'),
+            settings: document.getElementById('bottom-tab-settings') // New
+        };
+        
+        const contentAreas = {
+            home: document.getElementById('content-home'),
+            games: document.getElementById('content-games'),
+            ai: document.getElementById('content-ai'),
+            settings: document.getElementById('content-settings') // New
+        };
+        
+        const loadingScreen = document.getElementById('loading-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const appWrapper = document.getElementById('app');
+        const warningModal = document.getElementById('warning-modal');
+        const gameClickedScreen = document.getElementById('game-clicked-screen');
+
+
+        // --- Theme Management Logic (NEW) ---
+        function setTheme(themeName) {
+            const body = document.body;
+            // Remove all existing theme classes
+            body.classList.remove('theme-classic', 'theme-halloween', 'theme-christmas', 'theme-party', 'theme-4studs');
+            // Add the new theme class
+            body.classList.add(`theme-${themeName}`);
+            
+            // Save preference to localStorage
+            localStorage.setItem('radical-red-theme', themeName);
+            
+            // Update active theme button style
+            document.querySelectorAll('.theme-option-btn').forEach(btn => {
+                btn.classList.remove('border-primary-accent', 'shadow-themed-glow');
+                btn.style.borderColor = 'transparent'; // Reset non-active borders
+            });
+            const activeBtn = document.getElementById(`theme-${themeName}-btn`);
+            if (activeBtn) {
+                 // Get the computed border color from the theme
+                 const primaryColor = `rgb(${getComputedStyle(body).getPropertyValue('--color-primary-rgb')})`;
+                 activeBtn.style.borderColor = primaryColor;
+                 activeBtn.classList.add('shadow-themed-glow');
+            }
+            
+            // Re-apply primary styles which use CSS variables (like progress bar)
+            // This is crucial to immediately reflect the new theme color
+            const primaryColorRgb = getComputedStyle(body).getPropertyValue('--color-primary-rgb');
+            document.getElementById('progress-bar').style.backgroundColor = `rgb(${primaryColorRgb})`;
+            
+            // Update loading screen logo colors
+            const loadingLogoContainer = document.getElementById('loading-logo-container');
+            if (loadingLogoContainer) {
+                loadingLogoContainer.style.borderColor = `rgb(${primaryColorRgb})`;
+                loadingLogoContainer.querySelector('span').style.color = `rgb(${primaryColorRgb})`;
+                loadingLogoContainer.style.boxShadow = getComputedStyle(body).getPropertyValue('--shadow-glow');
+            }
+            document.querySelector('#loading-screen h1').style.color = `rgb(${primaryColorRgb})`;
+            document.querySelector('#loading-screen .border').style.borderColor = `rgba(${primaryColorRgb}, 0.5)`;
+
+        }
+
+        function loadTheme() {
+            // Load theme from localStorage, default to 'classic'
+            const savedTheme = localStorage.getItem('radical-red-theme') || 'classic';
+            setTheme(savedTheme);
+        }
+        
+        // --- Tab Switching Logic ---
+        function showTab(tabId) {
+            // Don't allow tab switching until app is loaded
+            if (!isAppLoaded) return;
+            
+            // Check for games tab warning
+            if (tabId === 'games' && !hasAcknowledgedWarning) {
+                warningModal.classList.remove('hidden');
+                return; // Stop execution, wait for user to acknowledge
+            }
+            
+            // Hide the "Launch Successful" screen if it's visible
+            gameClickedScreen.classList.add('hidden');
+            
+            tabs.forEach(id => {
+                const isTargetTab = (id === tabId);
+                
+                // --- Update Content Area Visibility ---
+                if (contentAreas[id]) {
+                    if (isTargetTab) {
+                        contentAreas[id].classList.add('active');
+                        contentAreas[id].classList.remove('hidden');
+                    } else {
+                        contentAreas[id].classList.remove('active');
+                        // Add hidden after transition finishes for better accessibility/layout control
+                        setTimeout(() => {
+                            if (contentAreas[id] && !contentAreas[id].classList.contains('active')) {
+                                contentAreas[id].classList.add('hidden');
+                            }
+                        }, 300); 
+                    }
+                }
+
+                // --- Update Bottom Tab Button Styles ---
+                if (bottomTabButtons[id]) {
+                    const icon = bottomTabButtons[id].querySelector('.material-symbols-outlined');
+                    if (isTargetTab) {
+                        // Active tab styles
+                        bottomTabButtons[id].classList.remove('text-gray-400');
+                        bottomTabButtons[id].classList.add('text-primary-color');
+                        // Set icon to FILLED
+                        if (icon) icon.style.fontVariationSettings = "'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 28";
+                    } else {
+                        // Inactive tab styles
+                        bottomTabButtons[id].classList.remove('text-primary-color');
+                        bottomTabButtons[id].classList.add('text-gray-400');
+                        // Set icon to not filled
+                         if (icon) icon.style.fontVariationSettings = "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24";
+                    }
+                }
+            });
+        }
+        
+        // --- Warning Modal Logic ---
+        function acknowledgeWarning() {
+            hasAcknowledgedWarning = true;
+            warningModal.classList.add('hidden');
+            showTab('games'); // Now, proceed to show the games tab
+        }
+        
+        // --- Game Clicked Screen Logic ---
+        function launchGame(url) {
+            // Open the game in a new tab
+            window.open(url, '_blank');
+            
+            // Hide all main tab content
+            tabs.forEach(id => {
+                if (contentAreas[id]) {
+                    contentAreas[id].classList.remove('active');
+                    // Add hidden after transition finishes
+                    setTimeout(() => {
+                         if (contentAreas[id] && !contentAreas[id].classList.contains('active')) {
+                            contentAreas[id].classList.add('hidden');
+                         }
+                    }, 300); 
+                }
+            });
+            
+            // Show the "Launch Successful" screen
+            gameClickedScreen.classList.remove('hidden');
+        }
+        
+        function goBackToGames() {
+            gameClickedScreen.classList.add('hidden');
+            showTab('games');
+        }
+        
+        // Function to open the Report Problem form
+        function reportProblem() {
+            window.open(REPORT_FORM_URL, '_blank');
+            customAlert("The Report Problem form is now open in a new tab. Thank you for helping us improve!");
+        }
+        
+        // Function to open the Suggest Feature form
+        function suggestFeature() {
+            window.open(SUGGEST_FORM_URL, '_blank');
+            customAlert("The Suggest Features form is now open in a new tab. We appreciate your ideas!");
+        }
+        
+        // Custom Alert function to comply with the environment rules
+        function customAlert(message) {
+            // Remove any existing alert
+            const existingAlert = document.getElementById('custom-alert-modal');
+            if(existingAlert) {
+                existingAlert.remove();
+            }
+
+            const tempAlert = document.createElement('div');
+            tempAlert.id = 'custom-alert-modal';
+            tempAlert.className = 'fixed inset-0 z-[60] bg-black/90 flex justify-center items-center p-4';
+            // We must dynamically apply the theme classes to the alert itself
+            tempAlert.innerHTML = `
+                <div class="bg-card-themed rounded-xl shadow-themed-glow p-6 w-full max-w-sm border-2 border-primary-accent/80">
+                    <h3 class="text-xl font-bold text-white mb-3">Notice</h3>
+                    <p class="text-gray-400 text-sm">${message}</p>
+                    <button onclick="this.parentNode.parentNode.remove()" class="mt-4 w-full bg-primary-accent text-white py-2 rounded-lg hover:bg-primary-darken font-semibold transition-colors">
+                        Close
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(tempAlert);
+            // Manually apply theme to the new element
+            const alertBody = tempAlert.querySelector('.bg-card-themed');
+            if (alertBody) {
+                 alertBody.style.backgroundColor = `var(--color-bg-card)`;
+                 alertBody.style.borderColor = `rgba(var(--color-primary-rgb), 0.8)`;
+                 alertBody.style.boxShadow = `var(--shadow-glow)`;
+                 alertBody.querySelector('button').style.backgroundColor = `rgb(var(--color-primary-rgb))`;
+            }
+        }
+
+
+        // --- Game List Population (Data updated with Halloween 2025) ---
+        
+        const gameData = {
+            // NEW SECTION
+            "Halloween 2025": [
+                 { name: "Google Doodle Halloween 2025", url: "https://www.google.com/webhp?ddllb=1&doodle=389734636&ved=0ahUKEwiH0eaG68yQAxVwZjABHVQ3FJUQPQgB" }
+            ],
+            "Turbowarp Games": [
+                { name: "Tomb of The Mask (on Turbowarp)", url: "https://mirror.turbowarp.xyz/#996379166?fps=60" },
+                { name: "Vectoid TD 3D v1.4 (on Turbowarp)", url: "https://mirror.turbowarp.xyz/?fps=60&hqpen#670754400" },
+                { name: "Animdustry (on Turbowarp)", url: "https://mirror.turbowarp.xyz/?fps=60&stuck&offscreen&limitless&hqpen#600000221" }
+            ],
+            "Adventure": [
+                { name: "The Forever Labyrinth", url: "https://artsandculture.google.com/experiment/the-forever-labyrinth/WAG_QoNY4_4vOQ" }
+            ],
+            "Art": [
+                { name: "Magma", url: "https://magma.com/" },
+                { name: "Kleki", url: "https://kleki.com/" },
+                { name: "Excalidraw", url: "https://excalidraw.com/" },
+                { name: "Autodraw", url: "https://www.autodraw.com/" },
+                { name: "Quick, Draw!", url: "https://quickdraw.withgoogle.com/" }
+            ],
+            "Action": [
+                { name: "Blockpost", url: "https://playblockpost.pages.dev/" },
+                { name: "Crazy Cattle", url: "https://www.crazycattle.org/index.html" },
+                { name: "JBlaha Sketchbook", url: "https://jblaha.art/sketchbook/0.4/" }
+            ],
+            "Sandbox": [
+                { name: "Minecraft 1.8", url: "https://www.otomads.top/game/minecraft/version/1.8/" }
+            ],
+            "Gaming Sites": [
+                { name: "Blooket 1", url: "https://blooket1.com/#google_vignette" },
+                { name: "MSN Play", url: "https://www.msn.com/en-us/play" },
+                { name: "Toms Toys", url: "https://toms.toys/" },
+                { name: "Duck Math", url: "https://duckmath.org/" },
+                { name: "Unblocked Games 76", url: "https://sites.google.com/view/unblocked-games-76-new/home" },
+                { name: "The Useless Web", url: "https://theuselessweb.com/" }
+            ],
+            "Simulation": [
+                { name: "Orb Farm", url: "https://orb.farm/" },
+                { name: "Codepen Fluid", url: "https://codepen.io/akm2/full/AGgarW" },
+                { name: "OpenProcessing Sketch", url: "https://openprocessing.org/sketch/1223047" }
+            ],
+            "Google Doodles": [
+                { name: "Snake", url: "https://www.google.com/search?q=google+doodles+snake" },
+                { name: "Block Breaker", url: "https://www.google.com/search?q=google+doodles+block+breker" },
+                { name: "Scoville", url: "https://www.google.com/search?q=google+doodles+scoville" },
+                { name: "Tic-Tac-Toe", url: "https://www.google.com/search?q=google+tic-tac-toe" },
+                { name: "Halloween 2020", url: "https://www.google.com/search?q=google+doodle+halloween+2020" },
+                { name: "Pac-Man", url: "https://www.google.com/search?q=google+doodle+pac+man" },
+                { name: "Minesweeper", url: "https://www.google.com/search?q=google+minesweeper" },
+                { name: "Champion Island", url: "https://www.google.com/search?q=google+doodle+champion+island" },
+                { name: "Color Tiles", url: "https://www.google.com/search?q=google+color+tiles" },
+                { name: "Pony Express", url: "https://www.google.com/search?q=google+pony+express" },
+                { name: "Solitaire", url: "https://www.google.com/search?q=google+solitaire" },
+                { name: "Moon Landing", url: "https://www.google.com/search?q=google+doodle+moon" },
+                // FIX: Corrected the line below
+                { name: "4th of July 2019", url: "https://www.google.com/logos/2019/july4th19/r6/july4th19.html?hl=en" },
+                { name: "Fischinger", url: "https://www.google.com/logos/doodles/2017/fischinger/fischinger17.9.html?hl=en" }
+            ],
+            "Google Event Sites": [
+                { name: "Arts & Culture", url: "https://artsandculture.google.com/" },
+                { name: "Santa Tracker", url: "https://santatracker.google.com/" }
+            ],
+            "Card Games": [
+                { name: "Card Toys", url: "https://card.toys/" }
+            ],
+            "Additional Games": [
+                { name: "Duck Street", url: "https://duckstreet.net/" },
+                { name: "Try PAP", url: "https://trypap.com/" },
+                { name: "Drawing Garden", url: "https://drawing.garden/" },
+                { name: "Long Doge Challenge", url: "https://longdogechallenge.com/" },
+                { name: "Smash The Walls", url: "https://smashthewalls.com/" },
+                { name: "Cursor Effects", url: "https://cursoreffects.com/" },
+                { name: "Bury Me With My Money", url: "https://burymewithmymoney.com/" },
+                { name: "One Square Minesweeper", url: "https://onesquareminesweeper.com/" },
+                { name: "Mondrian and Me", url: "https://mondrianandme.com/" },
+                { name: "That's The Finger", url: "https://thatsthefinger.com/" },
+                { name: "Can't Not Tweet This", url: "https://cant-not-tweet-this.com/" },
+                { name: "Sliding Toys (8-Puzzle)", url: "https://sliding.toys/mystic-square/8-puzzle/daily/" },
+                { name: "Binary Piano", url: "https://binarypiano.com/" },
+                { name: "Pug in a Rug", url: "https://puginarug.com/" },
+                { name: "Paint Toys", url: "https://paint.toys/" },
+                { name: "Clicking Toys", url: "https://clicking.toys/" },
+                { name: "Memory Toys", url: "https://memory.toys/" },
+                { name: "Optical Toys", url: "https://optical.toys/" },
+                { name: "Maze Toys", url: "https://maze.toys/" },
+                { name: "Double Pressure", url: "https://www.doublepressure.com/" },
+                { name: "Trashloop", url: "https://www.trashloop.com/" },
+                { name: "OMG F***ing Dogs", url: "https://www.omfgdogs.com/" },
+                { name: "Pixels Fighting", url: "https://pixelsfighting.com/" },
+                { name: "Potato or Tomato", url: "https://potatoortomato.com/" },
+                { name: "Strobe Cool", url: "https://strobe.cool/" },
+                { name: "This is Not a Jumpscare", url: "https://thisisnotajumpscare.com/" },
+                { name: "The Zen Zone", url: "https://thezen.zone/" },
+                { name: "Lacquer Lacquer", url: "https://lacquerlacquer.com/" },
+                { name: "Man in the Dark", url: "https://maninthedark.com/" },
+                { name: "Yes No If", url: "https://www.yesnoif.com/" },
+                { name: "Corndog on Corndog", url: "https://corndogoncorndog.com/" },
+                { name: "Nulling The Void", url: "https://nullingthevoid.com/" },
+                { name: "Chris McKenzie", url: "https://chrismckenzie.com/" },
+                { name: "Pointer Pointer", url: "https://pointerpointer.com/" },
+                { name: "Hacker Typer", url: "https://hackertyper.com/" },
+                { name: "Eelslap", url: "http://eelslap.com/" },
+                { name: "Cat Bounce", url: "https://cat-bounce.com/" },
+                { name: "Koalas to the Max", url: "https://www.koalastothemax.com/" },
+                { name: "Rotating Sandwiches", url: "https://rotatingsandwiches.com/" },
+                { name: "Jackson Pollock", url: "https://jacksonpollock.org/" },
+                { name: "Checkbox Race", url: "https://checkboxrace.com/" },
+                { name: "Corgi Orgy", url: "https://corgiorgy.com/" }
+            ],
+            "Strategy": [
+                { name: "Checkbox Toys", url: "https://checkbox.toys/" },
+                { name: "Flappy 2048", url: "https://flappy-2048.com/" },
+                { name: "Flappy 2048 (Alt)", url: "https://www.yuanfudao.com/tutor-ybc-course-api/chair/flappy2048/" },
+                { name: "Gravity Lab", url: "https://lab.nationalmedals.org/gravity.php" },
+                { name: "Sound Lab", url: "https://lab.nationalmedals.org/sound.php" },
+                { name: "Two Player Games", url: "https://www.twoplayergames.org/" }
+            ]
+        };
+
+        // Function to create and inject game cards
+        function populateGameList() {
+            const template = document.getElementById('game-card-template');
+            const gamesTab = document.getElementById('content-games');
+            
+            if (!template || !gamesTab) return;
+
+            Object.keys(gameData).forEach(category => {
+                const games = gameData[category];
+                // Find the <details> tag's internal grid container
+                const summary = Array.from(gamesTab.querySelectorAll('summary')).find(el => el.textContent.includes(category));
+                
+                if (summary) {
+                    const detailContent = summary.nextElementSibling;
+                    let grid = detailContent.querySelector('.grid');
+                    
+                    if (!grid && detailContent.classList.contains('grid')) {
+                        grid = detailContent;
+                    }
+
+                    if (!grid) return; 
+
+                    // Clear existing game cards (but keep the warning text in Gaming Sites)
+                    const existingCards = grid.querySelectorAll('.bg-card-themed');
+                    existingCards.forEach(card => card.remove());
+
+                    games.forEach(game => {
+                        const cardClone = template.content.cloneNode(true);
+                        const cardElement = cardClone.querySelector('.bg-card-themed');
+                        
+                        cardElement.querySelector('.game-name').textContent = game.name;
+                        cardElement.querySelector('.game-url').textContent = game.url;
+                        
+                        const launchButton = cardElement.querySelector('.game-link');
+                        if (launchButton) {
+                            launchButton.addEventListener('click', () => {
+                                launchGame(game.url);
+                            });
+                        }
+                        
+                        grid.appendChild(cardElement);
+                    });
+                }
+            });
+        }
+
+
+        // --- App Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme(); // Load theme immediately so correct colors are used during loading
+            
+            // Simulate loading
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 500);
+
+            // Wait for progress bar animation to finish
+            setTimeout(() => {
+                loadingScreen.classList.add('opacity-0');
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    appWrapper.classList.remove('hidden');
+                    isAppLoaded = true;
+                    
+                    // Show initial tab and populate lists
+                    populateGameList();
+                    // Explicitly set the home tab as active after loading
+                    showTab('home'); 
+                    
+                }, 500); 
+            }, 1500); 
+        });
+    </script>
+
+</body>
+</html>
